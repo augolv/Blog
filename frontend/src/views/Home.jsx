@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import PostCard from "../components/PostCard";
 
 export default function Home() {
@@ -25,10 +26,16 @@ export default function Home() {
   return (
     <div>
       <h1>Home</h1>
-
-      {mockPosts.map((post) => (
-        <PostCard key={post.id} post={post} />
-      ))}
+      <ul>
+        {mockPosts.map((post) => (
+          <li>
+            <PostCard key={post.id} post={post} />
+            <Link to={`/posts/${post.id}`}>
+              <button>Read More</button>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

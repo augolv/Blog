@@ -11,7 +11,6 @@ export async function listPosts(req, res) {
 
 export async function fetchPost(req, res) {
   const { id } = req.params;
-  console.log(req.params);
 
   try {
     const post = await getPostById(id);
