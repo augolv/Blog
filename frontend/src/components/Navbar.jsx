@@ -11,6 +11,9 @@ export default function Navbar() {
           <Link to="/login">Login</Link>
         </li>
         <li>
+          <Link to={"/register"}>Register</Link>
+        </li>
+        <li>
           <Link to="/posts/new">New Post</Link>
         </li>
       </ul>
