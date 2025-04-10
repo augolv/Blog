@@ -111,7 +111,7 @@ Below are the main routes of the API and their expected request/response bodies.
 {
   "nome": "John Doe",
   "email": "john.doe@example.com",
-  "senha": "password123"
+  "password": "password123"
 }
 ```
 
@@ -130,7 +130,7 @@ Below are the main routes of the API and their expected request/response bodies.
 ```json
 {
   "email": "john.doe@example.com",
-  "senha": "password123"
+  "password": "password123"
 }
 ```
 
@@ -150,15 +150,15 @@ Below are the main routes of the API and their expected request/response bodies.
 [
   {
     "id": "uuid-1234",
-    "titulo": "First Post",
-    "conteudo": "This is the content of the first post.",
-    "autor_id": "uuid-5678"
+    "title": "First Post",
+    "content": "This is the content of the first post.",
+    "author_id": "uuid-5678"
   },
   {
     "id": "uuid-5678",
-    "titulo": "Second Post",
-    "conteudo": "This is the content of the second post.",
-    "autor_id": "uuid-5678"
+    "title": "Second Post",
+    "content": "This is the content of the second post.",
+    "author_id": "uuid-5678"
   }
 ]
 ```
@@ -170,9 +170,9 @@ Below are the main routes of the API and their expected request/response bodies.
 ```json
 {
   "id": "uuid-1234",
-  "titulo": "First Post",
-  "conteudo": "This is the content of the first post.",
-  "autor_id": "uuid-5678"
+  "title": "First Post",
+  "content": "This is the content of the first post.",
+  "author_id": "uuid-5678"
 }
 ```
 
@@ -182,8 +182,8 @@ Below are the main routes of the API and their expected request/response bodies.
 
 ```json
 {
-  "titulo": "My New Post",
-  "conteudo": "This is the content of my new post."
+  "title": "My New Post",
+  "content": "This is the content of my new post."
 }
 ```
 
@@ -201,8 +201,8 @@ Below are the main routes of the API and their expected request/response bodies.
 
 ```json
 {
-  "titulo": "Updated Post",
-  "conteudo": "This is the updated content of the post."
+  "title": "Updated Post",
+  "content": "This is the updated content of the post."
 }
 ```
 
