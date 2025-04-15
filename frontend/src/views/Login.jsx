@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { api } from "../services/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleEmail = (event) => {
     setEmail(event.target.value);
@@ -24,9 +26,11 @@ export default function Login() {
       .post("/auth/login", user)
       .then((response) => {
         localStorage.setItem("token", response.data.token);
+        navigate("/");
       })
       .catch((error) => {
         console.error("Login error:", error);
+        setError("Invalid email or password. Please try again.");
       });
   };
 
@@ -44,6 +48,7 @@ export default function Login() {
         </div>
         <button type="submit">Login</button>
       </form>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <p>
         Don't have an account? <Link to={"/register"}>Register here</Link>
       </p>
