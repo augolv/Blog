@@ -19,7 +19,7 @@ export default function Home() {
         setError("Failed to load posts");
         setIsLoading(false);
       });
-  }, []); // Array vazio para executar apenas na montagem
+  }, []);
 
   if (isLoading) {
     return <div>Loading posts...</div>;
