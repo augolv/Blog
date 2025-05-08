@@ -35,7 +35,7 @@ export default function Register() {
       })
       .catch((error) => {
         console.error("Register error:", error);
-        setError("Email already registered. Please try again.");
+        setError("Review your data. Please try again.");
       });
   };
 
