@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router";
 import { api } from "../services/api";
 
 export default function Login() {
@@ -7,6 +7,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || "/";
 
   const handleEmail = (event) => {
     setEmail(event.target.value);
@@ -26,7 +28,7 @@ export default function Login() {
       .post("/auth/login", user)
       .then((response) => {
         localStorage.setItem("token", response.data.token);
-        navigate("/");
+        navigate(from, { replace: true });
       })
       .catch((error) => {
         console.error("Login error:", error);
