@@ -5,7 +5,7 @@ import { upload } from "../middlewares/multerConfig.js";
 
 const profileRoutes = e.Router();
 
-router.get("/:username", getProfile);
-router.put("/:id", authMiddleware, upload.single("profile_picture"), updateProfile);
+profileRoutes.get("/:username", getProfile);
+profileRoutes.put("/:id", authMiddleware, upload.single("profile_picture"), updateProfile);
 
 export default profileRoutes;
