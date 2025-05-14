@@ -40,7 +40,11 @@ export async function updateProfile(req, res) {
       profile_picture = result.secure_url;
     }
 
+<<<<<<< HEAD
     const updatedUser = await updateUser(id, username, bio, profile_picture);
+=======
+    const updatedUser = await userModel.updateUser(id, username, bio, profile_picture);
+>>>>>>> 2d65888e068efa91c8797b462607efe85f4a1073
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
     }

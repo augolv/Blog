@@ -3,9 +3,9 @@ import jwt from "jsonwebtoken";
 import { createUser, findUserByEmail } from "../models/userModel.js";
 
 export async function register(req, res) {
-  const { name, email, password } = req.body;
+  const { name, email, password, username } = req.body;
 
-  if (!name || !email || !password) {
+  if (!name || !email || !password || !username) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
@@ -18,7 +18,7 @@ export async function register(req, res) {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
 
-    await createUser({ name, email, hashPassword });
+    await createUser({ name, email, hashPassword, username });
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {

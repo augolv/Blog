@@ -1,9 +1,9 @@
 import database from "../db.js";
 
 export async function createUser(user) {
-  const { name, email, hashPassword } = user;
-  const queryString = "INSERT INTO users (name, email, hash_password) VALUES ($1, $2, $3) RETURNING *";
-  const { rows } = await database.query(queryString, [name, email, hashPassword]);
+  const { name, email, hashPassword, username } = user;
+  const queryString = "INSERT INTO users (name, email, hash_password, username) VALUES ($1, $2, $3, $4) RETURNING *";
+  const { rows } = await database.query(queryString, [name, email, hashPassword, username]);
   return rows[0];
 }
 
