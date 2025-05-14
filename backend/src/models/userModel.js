@@ -26,7 +26,7 @@ export async function updateUser(id, username, bio, profilePicture) {
 
   if (username) {
     const existingUser = await findByUserName(username);
-    if (existingUser & (existingUser.id !== id)) {
+    if (existingUser && existingUser.id !== id) {
       throw new Error("Username already exists");
     }
     fields.push(`username = $${index++}`);

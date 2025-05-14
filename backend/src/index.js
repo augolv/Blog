@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/posts", postRoutes);
-app.use("users", profileRoutes);
+app.use("/users", profileRoutes);
 
 app.listen(port, () => {
   console.log(`Server rodando em http://localhost:${port}`);
