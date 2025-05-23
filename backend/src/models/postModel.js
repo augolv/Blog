@@ -32,7 +32,7 @@ export async function getPostById(id) {
 
 export async function createPost(title, content, status, authorId) {
   const validStatuses = ["draft", "published"];
-  const finalStatus = validStatuses.includes(status) ? status : "draft";
+  const finalStatus = status && validStatuses.includes(status) ? status : "draft";
 
   const queryString = "INSERT INTO posts (title, content, status, author_id) VALUES ($1, $2, $3, $4) RETURNING *;";
   const { rows } = await database.query(queryString, [title, content, finalStatus, authorId]);
@@ -41,7 +41,7 @@ export async function createPost(title, content, status, authorId) {
 
 export async function updatePost(id, title, content, status) {
   const validStatuses = ["draft", "published"];
-  const finalStatus = status && validStatuses.includes(status) ? status : undefined;
+  const finalStatus = status && validStatuses.includes(status) ? status : "draft";
 
   const fields = [];
   const values = [];
