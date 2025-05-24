@@ -14,7 +14,7 @@ export async function findUserByEmail(email) {
 }
 
 export async function findByUserName(username) {
-  const queryString = "SELECT * FROM users WHERE username = $1";
+  const queryString = "SELECT id, username, bio, profile_picture FROM users WHERE username = $1";
   const { rows } = await database.query(queryString, [username]);
   return rows[0];
 }
