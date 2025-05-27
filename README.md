@@ -29,7 +29,7 @@
   - Vite
   - React Router
   - Axios
-  - Tailwind CSS v4
+  - Tailwind CSS
 
 - **Tools**:
 
@@ -56,7 +56,7 @@ git clone https://github.com/augolv/Blog
 
 ```env
 PORT=3000
-DB_URL=your-neon-connection-string
+DATABASE_URL=your-neon-connection-string
 JWT_SECRET=your-jwt-secret
 CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_API_KEY=your-api-key
@@ -69,12 +69,14 @@ CLOUDINARY_API_SECRET=your-api-secret
 VITE_API_URL=http://localhost:3000
 ```
 
+Runs at `http://localhost:3000`
+
 ### Starting the Backend
 
 ```bash
 cd backend
 npm install
-npm start
+npm run back
 ```
 
 Runs at `http://localhost:3000`
@@ -88,6 +90,13 @@ npm run dev
 ```
 
 Runs at `http://localhost:5173`
+
+### Starting Backend and Frontend together
+
+```bash
+cd backend
+npm start
+```
 
 ## <h2 id="routes">📍 API Endpoints</h2>
 
