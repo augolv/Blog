@@ -73,7 +73,6 @@ export default function Profile() {
 
   return (
     <div className="container mx-auto p-4 space-y-8">
-      {/* Header (código existente) ... */}
       <div className="flex items-center space-x-6">
         <img
           src={profile.profile_picture || "/default-avatar.png"}
@@ -86,10 +85,8 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Exibir erro de atualização do perfil, se houver */}
       {error && <div className="text-center text-red-500 p-2">{error}</div>}
 
-      {/* Formulário de Edição (renderização condicional com 'isOwner') */}
       {isOwner && (
         <form onSubmit={handleUpdate} className="bg-surface p-6 rounded-xl border border-border space-y-4">
           <h2 className="text-h2 font-semibold">Editar Perfil</h2>
