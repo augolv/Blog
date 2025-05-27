@@ -20,14 +20,21 @@ export default function Login() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const user = {
+    const userPayLoad = {
       email: email,
       password: password,
     };
     api
-      .post("/auth/login", user)
-      .then((response) => {
-        localStorage.setItem("token", response.data.token);
+      .post("/auth/login", userPayLoad)
+      .then((res) => {
+        localStorage.setItem("token", res.data.token);
+
+        if (res.data.user) {
+          localStorage.setItem("currentUser", JSON.stringify(res.data.user));
+        }
+
+        window.dispatchEvent(new Event("authChange"));
+
         navigate(from, { replace: true });
       })
       .catch((error) => {
@@ -41,12 +48,12 @@ export default function Login() {
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email:</label>
-          <input type="email" placeholder="Enter your email" onChange={handleEmail} />
+          <label htmlFor="email">Email:</label>
+          <input id="email" type="email" value={email} placeholder="Enter your email" onChange={handleEmail} />
         </div>
         <div>
-          <label>Password: </label>
-          <input type="password" placeholder="Enter your password" onChange={handlePassword} />
+          <label htmlFor="password">Password: </label>
+          <input id="password" type="password" value={password} placeholder="Enter your password" onChange={handlePassword} />
         </div>
         <button type="submit">Login</button>
       </form>
