@@ -5,6 +5,7 @@ import Login from "./views/Login";
 import Register from "./views/Register";
 import Post from "./views/Post";
 import CreatePost from "./views/CreatePost";
+import Profile from "./views/Profile";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/posts/new" element={<CreatePost />} />
           <Route path="/posts/:id" element={<Post />} />
+          <Route path="/profile/:username" element={<Profile />} />
         </Routes>
       </main>
     </BrowserRouter>

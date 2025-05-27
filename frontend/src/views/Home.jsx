@@ -11,7 +11,7 @@ export default function Home() {
     api
       .get("/posts")
       .then((res) => {
-        setPosts(res.data);
+        setPosts(res.data.posts);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -30,7 +30,7 @@ export default function Home() {
   }
 
   return (
-    <div className="home">
+    <div className="bg-bg text-text font-sans p-4">
       <h1>Blog Posts</h1>
       <div className="posts-list">{posts.length > 0 ? posts.map((post) => <PostCard key={post.id} post={post} />) : <p>No posts available.</p>}</div>
     </div>
