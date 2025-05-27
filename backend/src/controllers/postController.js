@@ -1,12 +1,12 @@
 import { createPost, deletePost, getAllPosts, getPostById, updatePost } from "../models/postModel.js";
 
 export async function listPosts(req, res) {
-  const { page, limit } = req.query;
+  const { page, limit, author } = req.query;
   const pageNumber = parseInt(page, 10) || 1;
   const limitNumber = parseInt(limit, 10) || 10;
 
   try {
-    const posts = await getAllPosts(pageNumber, limitNumber);
+    const posts = await getAllPosts(pageNumber, limitNumber, author);
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
@@ -50,8 +50,8 @@ export async function editPost(req, res) {
   const { title, content, status } = req.body;
   const authorId = req.user.id;
 
-  if (!title || !content) {
-    return res.status(400).json({ error: "Missing title or content" });
+  if (!title || !content || !status) {
+    return res.status(400).json({ error: "No fields provided for update." });
   }
 
   try {
@@ -65,7 +65,12 @@ export async function editPost(req, res) {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
-    await updatePost(id, title, content, status);
+    const updatedPost = await updatePost(id, title, content, status);
+    if (!updatedPost && (title || content || status)) {
+      return res.status(400).json({ error: "Update failed, no valid fields provided or post not found." });
+    } else if (!updatedPost) {
+      return res.status(200).json({ message: "No changes detected or applied.", post });
+    }
     res.status(200).json({ message: "Post updated successfully" });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });

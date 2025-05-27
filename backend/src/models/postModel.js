@@ -1,6 +1,6 @@
 import database from "../db.js";
 
-export async function getAllPosts(page, limit) {
+export async function getAllPosts(page, limit, authorUsername) {
   page = parseInt(page, 10);
   limit = parseInt(limit, 10);
 
@@ -13,12 +13,26 @@ export async function getAllPosts(page, limit) {
   }
 
   const offset = (page - 1) * limit;
+  const queryParams = [limit, offset];
+  let queryString = `
+    SELECT p.*, u.username as author_username 
+    FROM posts p
+    JOIN users u ON p.author_id = u.id
+  `;
+  let countQueryString = "SELECT COUNT(p.id) FROM posts p JOIN users u ON p.author_id = u.id";
 
-  const queryString = "SELECT * FROM posts ORDER BY created_at LIMIT $1 OFFSET $2;";
-  const { rows: posts } = await database.query(queryString, [limit, offset]);
+  if (authorUsername) {
+    queryString += ` WHERE u.username = $${queryParams.length + 1}`;
+    queryParams.push(authorUsername);
+    countQueryString += ` WHERE u.username = $1`;
+  }
 
-  const countQuery = "SELECT COUNT(*) FROM posts;";
-  const { rows: countRows } = await database.query(countQuery);
+  queryString += ` ORDER BY p.created_at DESC LIMIT $1::integer OFFSET $2::integer;`;
+
+  const { rows: posts } = await database.query(queryString, queryParams);
+
+  const countQueryParams = authorUsername ? [authorUsername] : [];
+  const { rows: countRows } = await database.query(countQueryString, countQueryParams);
   const totalPosts = parseInt(countRows[0].count, 10);
 
   return { posts, total: totalPosts, page, limit };
@@ -63,7 +77,7 @@ export async function updatePost(id, title, content, status) {
   }
 
   if (fields.length === 0) {
-    return null; // Nenhum campo para atualizar
+    return null;
   }
 
   values.push(id);
@@ -73,7 +87,7 @@ export async function updatePost(id, title, content, status) {
 }
 
 export async function deletePost(id) {
-  const queryString = "DELETE FROM posts WHERE id = $1";
+  const queryString = "DELETE FROM posts WHERE id = $1 RETURNING *;";
   const { rows } = await database.query(queryString, [id]);
   return rows[0];
 }
