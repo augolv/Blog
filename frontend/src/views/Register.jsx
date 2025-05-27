@@ -6,6 +6,7 @@ export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -21,20 +22,25 @@ export default function Register() {
     setPassword(event.target.value);
   };
 
+  const handleUsername = (event) => {
+    setUsername(event.target.value);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const user = {
       name: name,
       email: email,
       password: password,
+      username: username,
     };
     api
       .post("/auth/register", user)
       .then(() => {
         navigate("/login");
       })
-      .catch((error) => {
-        console.error("Register error:", error);
+      .catch((err) => {
+        console.error("Register error:", err);
         setError("Review your data. Please try again.");
       });
   };
@@ -44,16 +50,20 @@ export default function Register() {
       <h1>Register</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Name:</label>
-          <input type="text" placeholder="Enter your name" onChange={handleName} />
+          <label htmlFor="nameInput">Name:</label>
+          <input id="nameInput" type="text" value={name} placeholder="Enter your name" onChange={handleName} />
         </div>
         <div>
-          <label>Email:</label>
-          <input type="email" placeholder="Enter your email" onChange={handleEmail} />
+          <label htmlFor="usernameInput">Username:</label>
+          <input id="usernameInput" type="text" value={username} placeholder="Enter your username" onChange={handleUsername} />
         </div>
         <div>
-          <label>Password: </label>
-          <input type="password" placeholder="Enter your password" onChange={handlePassword} />
+          <label htmlFor="emailInput">Email:</label>
+          <input id="emailInput" type="email" value={email} placeholder="Enter your email" onChange={handleEmail} />
+        </div>
+        <div>
+          <label htmlFor="passwordInput">Password:</label>
+          <input id="passwordInput" type="password" value={password} placeholder="Enter your password" onChange={handlePassword} />
         </div>
         <button type="submit">Register</button>
       </form>
