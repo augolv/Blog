@@ -24,21 +24,21 @@ api.interceptors.response.use(
   (error) => {
     if (error.response) {
       if (error.response.status === 401 || error.response.status === 403) {
-        console.warn("Token expirado ou inválido. Deslogando...");
+        console.warn("Expired or invalid token. Logging out...");
 
         localStorage.removeItem("token");
         localStorage.removeItem("currentUser");
         window.dispatchEvent(new Event("authChange"));
 
         if (window.location.pathname !== "/login") {
-          alert("Sua sessão expirou. Por favor, faça login novamente.");
+          alert("Your session has expired. Please log in again.");
           window.location.href = "/login";
         }
       }
     } else if (error.request) {
-      console.error("Error no request (sem resposta do servidor):", error.request);
+      console.error("Error in request (no response from server):", error.request);
     } else {
-      console.error("Error na configuração da requisição:", error.message);
+      console.error("Error in request configuration:", error.message);
     }
     return Promise.reject(error);
   }
