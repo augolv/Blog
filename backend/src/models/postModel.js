@@ -1,38 +1,48 @@
 import database from "../db.js";
 
-export async function getAllPosts(page, limit, authorUsername) {
+export async function getAllPosts(page, limit, authorUsername, status = "published") {
   page = parseInt(page, 10);
   limit = parseInt(limit, 10);
 
-  if (isNaN(page) || page < 1) {
-    page = 1;
-  }
-
-  if (isNaN(limit) || limit < 1) {
-    limit = 10;
-  }
+  if (isNaN(page) || page < 1) page = 1;
+  if (isNaN(limit) || limit < 1) limit = 10;
 
   const offset = (page - 1) * limit;
-  const queryParams = [limit, offset];
-  let queryString = `
+
+  let queryParams = [];
+  let paramIndex = 1;
+
+  let baseQuery = `
     SELECT p.*, u.username as author_username 
     FROM posts p
     JOIN users u ON p.author_id = u.id
   `;
-  let countQueryString = "SELECT COUNT(p.id) FROM posts p JOIN users u ON p.author_id = u.id";
+  let countBaseQuery = "SELECT COUNT(p.id) FROM posts p JOIN users u ON p.author_id = u.id";
 
-  if (authorUsername) {
-    queryString += ` WHERE u.username = $${queryParams.length + 1}`;
-    queryParams.push(authorUsername);
-    countQueryString += ` WHERE u.username = $1`;
+  let conditions = [];
+
+  if (status && status !== "all") {
+    conditions.push(`p.status = $${paramIndex++}`);
+    queryParams.push(status);
   }
 
-  queryString += ` ORDER BY p.created_at DESC LIMIT $1::integer OFFSET $2::integer;`;
+  if (authorUsername) {
+    conditions.push(`u.username = $${paramIndex++}`);
+    queryParams.push(authorUsername);
+  }
 
-  const { rows: posts } = await database.query(queryString, queryParams);
+  if (conditions.length > 0) {
+    const whereClause = " WHERE " + conditions.join(" AND ");
+    baseQuery += whereClause;
+    countBaseQuery += whereClause;
+  }
 
-  const countQueryParams = authorUsername ? [authorUsername] : [];
-  const { rows: countRows } = await database.query(countQueryString, countQueryParams);
+  const finalQueryParamsForSelect = [...queryParams, limit, offset];
+  baseQuery += ` ORDER BY p.created_at DESC LIMIT $${paramIndex++}::integer OFFSET $${paramIndex++}::integer;`;
+
+  const { rows: posts } = await database.query(baseQuery, finalQueryParamsForSelect);
+
+  const { rows: countRows } = await database.query(countBaseQuery, queryParams);
   const totalPosts = parseInt(countRows[0].count, 10);
 
   return { posts, total: totalPosts, page, limit };

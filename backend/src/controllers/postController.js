@@ -1,13 +1,14 @@
 import { createPost, deletePost, getAllPosts, getPostById, updatePost } from "../models/postModel.js";
 
 export async function listPosts(req, res) {
-  const { page, limit, author } = req.query;
+  const { page, limit, author, status } = req.query;
   const pageNumber = parseInt(page, 10) || 1;
   const limitNumber = parseInt(limit, 10) || 10;
+  const statusFilter = status || "published";
 
   try {
-    const posts = await getAllPosts(pageNumber, limitNumber, author);
-    res.status(200).json(posts);
+    const result = await getAllPosts(pageNumber, limitNumber, author, statusFilter);
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
