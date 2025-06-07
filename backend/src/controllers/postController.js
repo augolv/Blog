@@ -51,7 +51,7 @@ export async function editPost(req, res) {
   const { title, content, status } = req.body;
   const authorId = req.user.id;
 
-  if (!title || !content || !status) {
+  if (!title && !content && !status) {
     return res.status(400).json({ error: "No fields provided for update." });
   }
 
@@ -66,13 +66,19 @@ export async function editPost(req, res) {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
+    if (post.status === "published") {
+      return res.status(403).json({ error: "Published posts cannot be edited." });
+    }
+
     const updatedPost = await updatePost(id, title, content, status);
+
     if (!updatedPost && (title || content || status)) {
       return res.status(400).json({ error: "Update failed, no valid fields provided or post not found." });
     } else if (!updatedPost) {
       return res.status(200).json({ message: "No changes detected or applied.", post });
     }
-    res.status(200).json({ message: "Post updated successfully" });
+
+    res.status(200).json({ message: "Post updated successfully", post: updatedPost });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }

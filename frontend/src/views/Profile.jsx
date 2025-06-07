@@ -182,7 +182,7 @@ export default function Profile() {
           ) : (
             <div className="space-y-8 md:space-y-10">
               {posts.map((post) => (
-                <PostCard key={post.id} post={post} />
+                <PostCard key={post.id} post={post} isOwner={isOwner} />
               ))}
             </div>
           )}
