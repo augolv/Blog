@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 
-export default function PostCard({ post, isOwner = false }) {
+export default function PostCard({ post, isOwner = false, onDelete }) {
   const formatDate = (dateString) => {
     if (!dateString) return "";
     return new Date(dateString).toLocaleDateString("pt-BR", {
@@ -8,6 +8,13 @@ export default function PostCard({ post, isOwner = false }) {
       month: "long",
       day: "numeric",
     });
+  };
+
+  const handleDeleteClick = (e) => {
+    e.preventDefault();
+    if (onDelete) {
+      onDelete(post.id);
+    }
   };
 
   return (
@@ -46,11 +53,18 @@ export default function PostCard({ post, isOwner = false }) {
           <span className="ml-1.5 transition-transform duration-200 ease-in-out group-hover:translate-x-1">&rarr;</span>
         </Link>
 
-        {isOwner && post.status === "draft" && (
-          <Link to={`/posts/edit/${post.id}`} className="inline-flex items-center text-accent hover:underline font-semibold text-sm">
-            Editar
-          </Link>
-        )}
+        <div className="flex items-center space-x-4">
+          {isOwner && post.status === "draft" && (
+            <Link to={`/posts/edit/${post.id}`} className="inline-flex items-center text-accent hover:underline font-semibold text-sm">
+              Editar
+            </Link>
+          )}
+          {isOwner && onDelete && (
+            <button onClick={handleDeleteClick} className="inline-flex items-center text-red-500 hover:underline font-semibold text-sm">
+              Excluir
+            </button>
+          )}
+        </div>
       </footer>
     </article>
   );

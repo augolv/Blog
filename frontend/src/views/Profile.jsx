@@ -22,11 +22,9 @@ export default function Profile() {
   const [currentPostsPage, setCurrentPostsPage] = useState(1);
   const [totalPostsPages, setTotalPostsPages] = useState(0);
 
-  useEffect(() => {
+  const fetchProfileData = () => {
     setIsLoadingProfile(true);
-    setError("");
     const loggedInUser = getCurrentUser();
-
     api
       .get(`/users/${username}`)
       .then((res) => {
@@ -46,11 +44,10 @@ export default function Profile() {
       .finally(() => {
         setIsLoadingProfile(false);
       });
-  }, [username]);
+  };
 
-  useEffect(() => {
+  const fetchPosts = () => {
     if (!profile) return;
-
     setIsLoadingPosts(true);
     api
       .get(`/posts?author=${username}&status=all&page=${currentPostsPage}&limit=${POSTS_PER_PAGE_PROFILE}`)
@@ -64,7 +61,15 @@ export default function Profile() {
       .finally(() => {
         setIsLoadingPosts(false);
       });
-  }, [profile, username, currentPostsPage]);
+  };
+
+  useEffect(() => {
+    fetchProfileData();
+  }, [username]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [profile, currentPostsPage]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -92,6 +97,20 @@ export default function Profile() {
     }
   };
 
+  const handleDeletePost = async (postId) => {
+    const isConfirmed = window.confirm("Você tem certeza que deseja excluir este post? Esta ação não pode ser desfeita.");
+
+    if (isConfirmed) {
+      try {
+        await api.delete(`/posts/${postId}`);
+        setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+      } catch (err) {
+        console.error("Failed to delete post:", err);
+        alert("Falha ao excluir o post. Tente novamente.");
+      }
+    }
+  };
+
   const handlePreviousPostsPage = () => {
     setCurrentPostsPage((prevPage) => Math.max(prevPage - 1, 1));
   };
@@ -114,9 +133,13 @@ export default function Profile() {
       <div className="container mx-auto max-w-4xl space-y-8 md:space-y-10">
         <header className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:items-center sm:space-x-6">
           <img
-            src={profile.profile_picture || "/default-avatar.png"}
+            src={profile.profile_picture || "https://placehold.co/128x128/262626/e5e7eb?text=?"}
             alt="Avatar"
             className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-2 border-border"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "https://placehold.co/128x128/262626/e5e7eb?text=?";
+            }}
           />
           <div className="mt-4 sm:mt-0">
             <h1 className="text-2xl sm:text-3xl font-bold text-text">{profile.username}</h1>
@@ -124,7 +147,7 @@ export default function Profile() {
           </div>
         </header>
 
-        {error && <div className="text-center text-red-500 p-2 bg-red-900/20 border border-red-500/50 rounded">{error}</div>}
+        {error && <div className="text-center text-red-400 p-3 bg-red-900/20 border border-red-500/50 rounded-md">{error}</div>}
 
         {isOwner && (
           <form onSubmit={handleUpdate} className="bg-surface p-6 rounded-xl border border-border space-y-4">
@@ -137,7 +160,7 @@ export default function Profile() {
                 id="editUsernameInput"
                 value={editUsername}
                 onChange={(e) => setEditUsername(e.target.value)}
-                className="w-full bg-bg border border-border rounded p-2 text-text focus:ring-2 focus:ring-primary focus:border-primary transition"
+                className="w-full bg-bg border border-border rounded-md p-2.5 text-text focus:ring-2 focus:ring-primary focus:border-primary transition"
               />
             </div>
             <div>
@@ -149,7 +172,7 @@ export default function Profile() {
                 value={editBio}
                 onChange={(e) => setEditBio(e.target.value)}
                 rows={3}
-                className="w-full bg-bg border border-border rounded p-2 text-text focus:ring-2 focus:ring-primary focus:border-primary transition"
+                className="w-full bg-bg border border-border rounded-md p-2.5 text-text leading-relaxed focus:ring-2 focus:ring-primary focus:border-primary transition"
               />
             </div>
             <div>
@@ -161,12 +184,12 @@ export default function Profile() {
                 type="file"
                 accept="image/*"
                 onChange={(e) => setEditPicture(e.target.files[0])}
-                className="block w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-hover file:cursor-pointer"
+                className="block w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-hover file:cursor-pointer transition"
               />
             </div>
             <button
               type="submit"
-              className="px-5 py-2.5 bg-primary text-white rounded hover:bg-primary-hover font-semibold transition-colors disabled:opacity-50"
+              className="px-5 py-2.5 bg-primary text-white font-semibold rounded-md hover:bg-primary-hover transition-colors disabled:opacity-50"
             >
               Salvar Alterações
             </button>
@@ -182,7 +205,7 @@ export default function Profile() {
           ) : (
             <div className="space-y-8 md:space-y-10">
               {posts.map((post) => (
-                <PostCard key={post.id} post={post} isOwner={isOwner} />
+                <PostCard key={post.id} post={post} isOwner={isOwner} onDelete={handleDeletePost} />
               ))}
             </div>
           )}
@@ -191,7 +214,7 @@ export default function Profile() {
               <button
                 onClick={handlePreviousPostsPage}
                 disabled={currentPostsPage === 1}
-                className="px-3 py-1.5 text-sm bg-primary text-white rounded disabled:bg-gray-500 disabled:cursor-not-allowed hover:bg-primary-hover transition-colors sm:px-4 sm:py-2"
+                className="px-3 py-1.5 text-sm bg-primary text-white rounded-md disabled:bg-gray-500 disabled:cursor-not-allowed hover:bg-primary-hover transition-colors sm:px-4 sm:py-2"
               >
                 Anterior
               </button>
@@ -201,7 +224,7 @@ export default function Profile() {
               <button
                 onClick={handleNextPostsPage}
                 disabled={currentPostsPage === totalPostsPages}
-                className="px-3 py-1.5 text-sm bg-primary text-white rounded disabled:bg-gray-500 disabled:cursor-not-allowed hover:bg-primary-hover transition-colors sm:px-4 sm:py-2"
+                className="px-3 py-1.5 text-sm bg-primary text-white rounded-md disabled:bg-gray-500 disabled:cursor-not-allowed hover:bg-primary-hover transition-colors sm:px-4 sm:py-2"
               >
                 Próxima
               </button>
