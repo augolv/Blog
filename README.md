@@ -1,16 +1,46 @@
 <h1 align="center" style="font-weight: bold;">Blog Fullstack 💻</h1>
 
 <p align="center">
+ <a href="https://blog-theta-khaki-95.vercel.app/" target="_blank"><strong>Live Demo</strong></a> •
  <a href="#tech">Technologies</a> • 
+ <a href="#features">Features</a> •
  <a href="#started">Getting Started</a> • 
  <a href="#routes">API Endpoints</a> • 
- <a href="#screenshots">Screenshots</a> • 
- <a href="#contribute">Contribute</a>
+ <a href="#screenshots">Screenshots</a>
 </p>
 
 <p align="center">
-    <b>This project was built to consolidate my knowledge in fullstack development, JWT authentication, and CRUD operations using PostgreSQL</b>
+    <b>A responsive full-stack blog platform, built to consolidate and demonstrate knowledge in modern web development. The project includes JWT authentication, crud business rules operations, and a content flow of content with "draft" and "published" status.</b>
 </p>
+
+<h2 id="screenshots">📸 Screenshots</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th align="center">Home Page</th>
+      <th align="center">Mobile Version</th>
+      <th align="center">Individual Post</th>
+      <th align="center">User Profile</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <img src="assets/home.png" alt="Imagem da Home Page" width="100%">
+      </td>
+      <td>
+        <img src="assets/mobile.png" alt="Imagem da versão Mobile" width="100%">
+      </td>
+      <td>
+        <img src="assets/post.png" alt="Imagem de um Post Individual" width="100%">
+      </td>
+      <td>
+        <img src="assets/profile.png" alt="Imagem do Perfil de Usuário" width="100%">
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ## <h2 id="tech">💻 Technologies</h2>
 
@@ -182,13 +212,11 @@ npm start
 
 Form-Data body:
 
+```js
 - `username`: (string)
 - `bio`: (string)
 - `profile_picture`: (file, optional)
-
-## <h2 id="screenshots">📸 Screenshots</h2>
-
-> Screenshots will be added after frontend completion.
+```
 
 ## <h2 id="contribute">📫 Contribute</h2>
 
